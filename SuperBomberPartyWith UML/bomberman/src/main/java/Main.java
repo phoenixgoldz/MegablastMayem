@@ -1,7 +1,10 @@
-public class Main extends GameLauncher {
+public class Main {
 
+    public static void main(String[] args) {
+        // Store args for later use (like GamePanel loading)
+        GameLauncher.args = args;
 
-    public Main(int num) {
-        super(num);
+        // Show splash video first
+        SplashVideoPlayer.playSplashVideo();
     }
 }

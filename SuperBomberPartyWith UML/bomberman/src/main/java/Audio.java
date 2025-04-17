@@ -20,7 +20,7 @@ public class Audio {
     public static void playMenu() {
         try {
             AudioInputStream in1 = AudioSystem.getAudioInputStream(
-                    Audio.class.getResource("/resources/music/32. Main Theme.wav")
+                    Audio.class.getResource("/music/32. Main Theme.wav")
             );
             MenuMusic = AudioSystem.getClip();
             MenuMusic.open(in1);
@@ -40,7 +40,7 @@ public class Audio {
     public static void playMenuMove() {
         try {
             AudioInputStream in = AudioSystem.getAudioInputStream(
-                    Audio.class.getResource("/resources/sound effects/MenuMove.wav")
+                    Audio.class.getResource("/sound effects/MenuMove.wav")
             );
             Clip clip = AudioSystem.getClip();
             clip.open(in);
@@ -53,7 +53,7 @@ public class Audio {
     public static void playMenuSelect() {
         try {
             AudioInputStream in = AudioSystem.getAudioInputStream(
-                    Audio.class.getResource("/resources/sound effects/MenuSelect.wav")
+                    Audio.class.getResource("/sound effects/MenuSelect.wav")
             );
             Clip clip = AudioSystem.getClip();
             clip.open(in);
@@ -66,7 +66,7 @@ public class Audio {
     public static void playBombDrop() {
         try {
             AudioInputStream in = AudioSystem.getAudioInputStream(
-                    Audio.class.getResource("/resources/sound effects/BombDrop.wav")
+                    Audio.class.getResource("/sound effects/BombDrop.wav")
             );
             Clip clip = AudioSystem.getClip();
             clip.open(in);
@@ -79,7 +79,7 @@ public class Audio {
     public static void playBombExplode() {
         try {
             AudioInputStream in = AudioSystem.getAudioInputStream(
-                    Audio.class.getResource("/resources/sound effects/8BitBombExplosion.wav")
+                    Audio.class.getResource("/sound effects/8BitBombExplosion.wav")
             );
             Clip clip = AudioSystem.getClip();
             clip.open(in);
@@ -92,7 +92,7 @@ public class Audio {
     public static void playVictory() {
         try {
             AudioInputStream in = AudioSystem.getAudioInputStream(
-                    Audio.class.getResource("/resources/sound effects/Victory.wav")
+                    Audio.class.getResource("/sound effects/Victory.wav")
             );
             Clip clip = AudioSystem.getClip();
             clip.open(in);
@@ -105,7 +105,7 @@ public class Audio {
     public static void playGameSong() {
         try {
             AudioInputStream in = AudioSystem.getAudioInputStream(
-                    Audio.class.getResource("/resources/music/60-Seconds-2020-03-22_-_8_Bit_Surf_-_FesliyanStudios.com_-_David_Renda.wav")
+                    Audio.class.getResource("/music/60-Seconds-2020-03-22_-_8_Bit_Surf_-_FesliyanStudios.com_-_David_Renda.wav")
             );
             Clip clip = AudioSystem.getClip();
             clip.open(in);
@@ -119,7 +119,7 @@ public class Audio {
     public static void playDeathSong() {
         try {
             AudioInputStream in = AudioSystem.getAudioInputStream(
-                    Audio.class.getResource("/resources/sound effects/kirby-death-sound.wav")
+                    Audio.class.getResource("/sound effects/kirby-death-sound.wav")
             );
             Clip clip = AudioSystem.getClip();
             clip.open(in);

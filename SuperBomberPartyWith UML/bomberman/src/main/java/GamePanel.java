@@ -66,6 +66,33 @@ public class GamePanel extends JPanel implements Runnable {
         this.loadMapFile(filename);
         this.addKeyListener(new GameController(this));
     }
+    // New constructor for random map loading
+    public GamePanel(BufferedReader reader) {
+        background = 1;
+        audio = new Audio(0);
+        this.setFocusable(true);
+        this.requestFocus();
+        this.setControls();
+        this.bg = ResourceCollection.Images.BACKGROUND.getImage();
+        this.bufferedReader = reader;
+        this.loadMapData();
+        this.addKeyListener(new GameController(this));
+    }
+
+    // Parses the CSV data into mapLayout
+    private void loadMapData() {
+        this.mapLayout = new ArrayList<>();
+        try {
+            String currentLine;
+            while ((currentLine = bufferedReader.readLine()) != null) {
+                if (currentLine.isEmpty()) continue;
+                mapLayout.add(new ArrayList<>(Arrays.asList(currentLine.split(","))));
+            }
+        } catch (IOException e) {
+            System.out.println(e + ": Error parsing map data");
+            e.printStackTrace();
+        }
+    }
 
     /**
      * Initialize the game panel with a HUD, window size, collection of game objects, and start the game loop.
@@ -75,6 +102,14 @@ public class GamePanel extends JPanel implements Runnable {
         GameObjectCollection.init();
         this.gameHUD = new GameHUD();
         this.generateMap();
+        // After parsing map data, validate column count
+        int expectedCols = mapLayout.get(0).size();
+        for (int i = 0; i < mapLayout.size(); i++) {
+            if (mapLayout.get(i).size() != expectedCols) {
+                System.err.println("❌ Row " + i + " has mismatched columns: " + mapLayout.get(i).size() + " (expected " + expectedCols + ")");
+            }
+        }
+
         this.gameHUD.init();
         this.setPreferredSize(new Dimension(this.mapWidth * 32, (this.mapHeight * 32)
                 + GameWindow.HUD_HEIGHT));
@@ -82,12 +117,6 @@ public class GamePanel extends JPanel implements Runnable {
         this.running = true;
     }
 
-    /**
-     * Loads the map file into buffered reader or load default map when no file is given.
-     * The file should be a file with strings separated by commas ",". Preferred .csv file.
-     *
-     * @param mapFile Name of the map file
-     */
     private void loadMapFile(String mapFile) {
         // Loading map file
         background = 1;
@@ -143,21 +172,13 @@ public class GamePanel extends JPanel implements Runnable {
                         break;
 
                     case ("H"):     // Hard wall; unbreakable
-                        // Code used to choose tile based on adjacent tiles
-                        int code = 0;
-                        if (y > 0 && mapLayout.get(y - 1).get(x).equals("H")) {
-                            code += 1;  // North
-                        }
-                        if (y < this.mapHeight - 1 && mapLayout.get(y + 1).get(x).equals("H")) {
-                            code += 4;  // South
-                        }
-                        if (x > 0 && mapLayout.get(y).get(x - 1).equals("H")) {
-                            code += 8;  // West
-                        }
-                        if (x < this.mapWidth - 1 && mapLayout.get(y).get(x + 1).equals("H")) {
-                            code += 2;  // East
-                        }
-                        BufferedImage sprHardWall = ResourceCollection.getHardWallTile(code);
+                        int key = 0;
+                        if (y > 0 && mapLayout.get(y - 1).get(x).equals("H")) key |= 0b0001; // North
+                        if (x < mapWidth - 1 && mapLayout.get(y).get(x + 1).equals("H")) key |= 0b0010; // East
+                        if (y < mapHeight - 1 && mapLayout.get(y + 1).get(x).equals("H")) key |= 0b0100; // South
+                        if (x > 0 && mapLayout.get(y).get(x - 1).equals("H")) key |= 0b1000; // West
+
+                        BufferedImage sprHardWall = ResourceCollection.getHardWallTile(key);
                         Wall hardWall = new Wall(new Point2D.Float(x * 32, y * 32), sprHardWall, false);
                         GameObjectCollection.spawn(hardWall);
                         break;
@@ -203,7 +224,7 @@ public class GamePanel extends JPanel implements Runnable {
                         GameObjectCollection.spawn(powerBomb);
                         break;
 
-                    case ("PU"):    // Powerup Fireup
+                    case ("PU"):    // Powerup Fire up
                         Powerup powerFireup = new Powerup(new Point2D.Float(x * 32, y * 32), Powerup.Type.Fireup);
                         GameObjectCollection.spawn(powerFireup);
                         break;
@@ -402,8 +423,8 @@ public class GamePanel extends JPanel implements Runnable {
         }
 
         // Check for the last bomber to survive longer than the others and increase score
-        // Score is added immediately so there is no harm of dying when you are the last one
-        // Reset map when there are 1 or less bombers left
+        //  is added immediately so there is no harm of dying when you are the last one
+        // Reset map when there are 1 or fewer bombers left
         if (!this.gameHUD.matchSet) {
             this.gameHUD.updateScore();
 
@@ -457,8 +478,8 @@ public class GamePanel extends JPanel implements Runnable {
 
         // Draw HUD
         int infoBoxWidth = panelWidth / 4;
-        g2.drawImage(this.gameHUD.getP1info(), infoBoxWidth * 0, 0, null);
-        g2.drawImage(this.gameHUD.getP2info(), infoBoxWidth * 1, 0, null);
+        g2.drawImage(this.gameHUD.getP1info(), 0, 0, null);
+        g2.drawImage(this.gameHUD.getP2info(), infoBoxWidth, 0, null);
         g2.drawImage(this.gameHUD.getP3info(), infoBoxWidth * 2, 0, null);
         g2.drawImage(this.gameHUD.getP4info(), infoBoxWidth * 3, 0, null);
 
@@ -468,7 +489,13 @@ public class GamePanel extends JPanel implements Runnable {
         g2.dispose();
         this.buffer.dispose();
     }
+    public int getMapWidth() {
+        return this.mapWidth;
+    }
 
+    public int getMapHeight() {
+        return this.mapHeight;
+    }
 }
 
 /**

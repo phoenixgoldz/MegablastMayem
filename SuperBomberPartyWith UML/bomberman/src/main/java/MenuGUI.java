@@ -23,7 +23,9 @@ public class MenuGUI extends JPanel {
         this.addKeyListener(menuController);
         this.setFocusable(true);
         this.requestFocus();
-        this.setPreferredSize(new Dimension(720, 720));
+        this.setPreferredSize(new Dimension(800, 800));
+        this.setDoubleBuffered(true);
+
         Audio.playMenu();
     }
 
@@ -60,58 +62,58 @@ public class MenuGUI extends JPanel {
         }
     }
     public static void drawStartScreen1(Graphics g) {
-        drawImage(g, "/resources/PlayGameStartScreen1.png");
+        drawImage(g, "/PlayGameStartScreen1.png");
     }
 
     public static void drawStartScreen2(Graphics g) {
-        drawImage(g, "/resources/PlayGameStartScreen2.png");
+        drawImage(g, "/PlayGameStartScreen2.png");
     }
 
     public static void drawStartScreen3(Graphics g) {
-        drawImage(g, "/resources/HowToPlayStartScreen1.png");
+        drawImage(g, "/HowToPlayStartScreen1.png");
     }
 
     public static void drawStartScreen4(Graphics g) {
-        drawImage(g, "/resources/HowToPlayStartScreen2.png");
+        drawImage(g, "/HowToPlayStartScreen2.png");
     }
 
     public static void drawStartScreen5(Graphics g) {
-        drawImage(g, "/resources/ControlsStartScreen1.png");
+        drawImage(g, "/ControlsStartScreen1.png");
     }
 
     public static void drawStartScreen6(Graphics g) {
-        drawImage(g, "/resources/ControlsStartScreen2.png");
+        drawImage(g, "/ControlsStartScreen2.png");
     }
 
     public static void drawPlayScreen1(Graphics g) {
-        drawImage(g, "/resources/PlayGame2PlayerScreen1.png");
+        drawImage(g, "/PlayGame2PlayerScreen1.png");
     }
 
     public static void drawPlayScreen2(Graphics g) {
-        drawImage(g, "/resources/PlayGame2PlayerScreen2.png");
+        drawImage(g, "/PlayGame2PlayerScreen2.png");
     }
 
     public static void drawPlayScreen3(Graphics g) {
-        drawImage(g, "/resources/PlayGame3PlayerScreen1.png");
+        drawImage(g, "/PlayGame3PlayerScreen1.png");
     }
 
     public static void drawPlayScreen4(Graphics g) {
-        drawImage(g, "/resources/PlayGame3PlayerScreen2.png");
+        drawImage(g, "/PlayGame3PlayerScreen2.png");
     }
 
     public static void drawPlayScreen5(Graphics g) {
-        drawImage(g, "/resources/PlayGame4PlayerScreen1.png");
+        drawImage(g, "/PlayGame4PlayerScreen1.png");
     }
 
     public static void drawPlayScreen6(Graphics g) {
-        drawImage(g, "/resources/PlayGame4PlayerScreen2.png");
+        drawImage(g, "/PlayGame4PlayerScreen2.png");
     }
 
     public static void drawHowToPlay(Graphics g) {
-        drawImage(g, "/resources/HowToPlay.png");
+        drawImage(g, "/HowToPlay.png");
     }
 
     public static void drawControls(Graphics g) {
-        drawImage(g, "/resources/Controls.png");
+        drawImage(g, "/Controls.png");
     }
 }
