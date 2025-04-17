@@ -5,7 +5,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 
@@ -14,7 +13,6 @@ public class MenuGUI extends JPanel {
     private final HashMap<Integer, Key> controls1;
 
     public MenuGUI() {
-
         this.controls1 = new HashMap<>();
         this.controls1.put(KeyEvent.VK_UP, Key.up);
         this.controls1.put(KeyEvent.VK_DOWN, Key.down);
@@ -26,17 +24,14 @@ public class MenuGUI extends JPanel {
         this.setFocusable(true);
         this.requestFocus();
         this.setPreferredSize(new Dimension(720, 720));
-        //BGM music for Menu
         Audio.playMenu();
     }
 
-    //background 1 - Play Game 1
     public int cursor = 1;
     public SubMenu activeMenu = SubMenu.NONE;
 
     @Override
     public void paintComponent(Graphics g) {
-
         if (activeMenu == SubMenu.NONE) {
             switch (cursor) {
                 case 1:
@@ -49,177 +44,74 @@ public class MenuGUI extends JPanel {
                     drawStartScreen5(g);
                     break;
             }
-        }else if (activeMenu == SubMenu.HOW_TO_PLAY){
+        } else if (activeMenu == SubMenu.HOW_TO_PLAY) {
             drawHowToPlay(g);
-        }else if (activeMenu == SubMenu.CONTROLS){
+        } else if (activeMenu == SubMenu.CONTROLS) {
             drawControls(g);
         }
     }
 
+    private static void drawImage(Graphics g, String path) {
+        try {
+            BufferedImage img = ImageIO.read(MenuGUI.class.getResource(path));
+            g.drawImage(img, 0, 0, 720, 720, null);
+        } catch (IOException | IllegalArgumentException e) {
+            e.printStackTrace();
+        }
+    }
     public static void drawStartScreen1(Graphics g) {
-        BufferedImage img = null;
-        try {
-            img = ImageIO.read(new File("src/main/resources/PlayGameStartScreen1.png"));
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-
-        g.drawImage(img, 0, 0, 720, 720, null);
+        drawImage(g, "/resources/PlayGameStartScreen1.png");
     }
 
-    //background 2 - Play Game 2
     public static void drawStartScreen2(Graphics g) {
-        BufferedImage img = null;
-        try {
-            img = ImageIO.read(new File("src/main/resources/PlayGameStartScreen2.png"));
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-
-        g.drawImage(img, 0, 0, 720, 720, null);
+        drawImage(g, "/resources/PlayGameStartScreen2.png");
     }
 
-    //background 3 - How to Play 1
     public static void drawStartScreen3(Graphics g) {
-        BufferedImage img = null;
-        try {
-            img = ImageIO.read(new File("src/main/resources/HowToPlayStartScreen1.png"));
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-
-        g.drawImage(img, 0, 0, 720, 720, null);
+        drawImage(g, "/resources/HowToPlayStartScreen1.png");
     }
 
-    //background 4 - How to Play 2
     public static void drawStartScreen4(Graphics g) {
-        BufferedImage img = null;
-        try {
-            img = ImageIO.read(new File("src/main/resources/HowToPlayStartScreen2.png"));
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-
-        g.drawImage(img, 0, 0, 720, 720, null);
+        drawImage(g, "/resources/HowToPlayStartScreen2.png");
     }
 
-    //background 5 - Controls 1
     public static void drawStartScreen5(Graphics g) {
-        BufferedImage img = null;
-        try {
-            img = ImageIO.read(new File("src/main/resources/ControlsStartScreen1.png"));
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-
-        g.drawImage(img, 0, 0, 720, 720, null);
+        drawImage(g, "/resources/ControlsStartScreen1.png");
     }
 
-    //background 6 - Controls 2
     public static void drawStartScreen6(Graphics g) {
-        BufferedImage img = null;
-        try {
-            img = ImageIO.read(new File("src/main/resources/ControlsStartScreen2.png"));
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-
-        g.drawImage(img, 0, 0, 720, 720, null);
+        drawImage(g, "/resources/ControlsStartScreen2.png");
     }
 
-    //background 7 - 2 Player 1
     public static void drawPlayScreen1(Graphics g) {
-        BufferedImage img = null;
-        try {
-            img = ImageIO.read(new File("src/main/resources/PlayGame2PlayerScreen1.png"));
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-
-        g.drawImage(img, 0, 0, 720, 720, null);
+        drawImage(g, "/resources/PlayGame2PlayerScreen1.png");
     }
 
-    //background 8 - 2 player 2
     public static void drawPlayScreen2(Graphics g) {
-        BufferedImage img = null;
-        try {
-            img = ImageIO.read(new File("src/main/resources/PlayGame2PlayerScreen2.png"));
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-
-        g.drawImage(img, 0, 0, 720, 720, null);
+        drawImage(g, "/resources/PlayGame2PlayerScreen2.png");
     }
 
-    //background 9 - 3 Player 1
     public static void drawPlayScreen3(Graphics g) {
-        BufferedImage img = null;
-        try {
-            img = ImageIO.read(new File("src/main/resources/PlayGame3PlayerScreen1.png"));
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-
-        g.drawImage(img, 0, 0, 720, 720, null);
+        drawImage(g, "/resources/PlayGame3PlayerScreen1.png");
     }
 
-    //background 10 - 3 Player 2
     public static void drawPlayScreen4(Graphics g) {
-        BufferedImage img = null;
-        try {
-            img = ImageIO.read(new File("src/main/resources/PlayGame3PlayerScreen2.png"));
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-
-        g.drawImage(img, 0, 0, 720, 720, null);
+        drawImage(g, "/resources/PlayGame3PlayerScreen2.png");
     }
 
-    //background 11 - 4 Player 1
     public static void drawPlayScreen5(Graphics g) {
-        BufferedImage img = null;
-        try {
-            img = ImageIO.read(new File("src/main/resources/PlayGame4PlayerScreen1.png"));
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-
-        g.drawImage(img, 0, 0, 720, 720, null);
+        drawImage(g, "/resources/PlayGame4PlayerScreen1.png");
     }
 
-    //background 12 - 4 Player 2
     public static void drawPlayScreen6(Graphics g) {
-        BufferedImage img = null;
-        try {
-            img = ImageIO.read(new File("src/main/resources/PlayGame4PlayerScreen2.png"));
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-
-        g.drawImage(img, 0, 0, 720, 720, null);
+        drawImage(g, "/resources/PlayGame4PlayerScreen2.png");
     }
 
-    //background 13
     public static void drawHowToPlay(Graphics g) {
-        BufferedImage img = null;
-        try {
-            img = ImageIO.read(new File("src/main/resources/HowToPlay.png"));
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-
-        g.drawImage(img, 0, 0, 720, 720, null);
+        drawImage(g, "/resources/HowToPlay.png");
     }
 
-    //background 14
     public static void drawControls(Graphics g) {
-        BufferedImage img = null;
-        try {
-            img = ImageIO.read(new File("src/main/resources/Controls.png"));
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-
-        g.drawImage(img, 0, 0, 720, 720, null);
+        drawImage(g, "/resources/Controls.png");
     }
 }
