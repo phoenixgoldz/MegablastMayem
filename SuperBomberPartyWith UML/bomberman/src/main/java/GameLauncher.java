@@ -93,9 +93,14 @@ public class GameLauncher extends Audio {
 
         String[] availableMaps = {
                 "/maps/default.csv",
+                "/maps/map_border.csv",
+                "/maps/map_checkerboard.csv",
                 "/maps/map_corners.csv",
                 "/maps/map_cross.csv",
-                "/maps/map_spiral.csv"
+                "/maps/map_fortress.csv",
+                "/maps/map_spiral.csv",
+                "/maps/map_spiral_v2.csv",
+                "/maps/map_x_pattern.csv"
         };
 
         String chosenMap = availableMaps[(int) (Math.random() * availableMaps.length)];
