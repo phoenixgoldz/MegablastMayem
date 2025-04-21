@@ -41,7 +41,7 @@ public class ResourceCollection {
         HARD_WALLS,
         BOMB,
         BOMB_PIERCE,
-        EXPLOSION_SPRITEMAP;
+        EXPLOSION_SPRITEMAP, PLAYER1, PLAYER2, PLAYER3, PLAYER4;
 
         public BufferedImage image = null;
         private BufferedImage[][] sprites = null;
@@ -118,10 +118,10 @@ public class ResourceCollection {
             return;
         }
 
-        SpriteMaps.PLAYER_1.sprites = sliceSpriteMap(SpriteMaps.PLAYER_1.image, 32, 48);
-        SpriteMaps.PLAYER_2.sprites = sliceSpriteMap(SpriteMaps.PLAYER_2.image, 32, 48);
-        SpriteMaps.PLAYER_3.sprites = sliceSpriteMap(SpriteMaps.PLAYER_3.image, 32, 48);
-        SpriteMaps.PLAYER_4.sprites = sliceSpriteMap(SpriteMaps.PLAYER_4.image, 32, 48);
+        SpriteMaps.PLAYER_1.sprites = sliceSpriteMap(SpriteMaps.PLAYER_1.image, 40, 48);
+        SpriteMaps.PLAYER_2.sprites = sliceSpriteMap(SpriteMaps.PLAYER_2.image, 40, 48);
+        SpriteMaps.PLAYER_3.sprites = sliceSpriteMap(SpriteMaps.PLAYER_3.image, 60, 48);
+        SpriteMaps.PLAYER_4.sprites = sliceSpriteMap(SpriteMaps.PLAYER_4.image, 40, 48);
 
         SpriteMaps.HARD_WALLS.sprites = sliceSpriteMap(SpriteMaps.HARD_WALLS.image, 32, 32);
 

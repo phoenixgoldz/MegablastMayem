@@ -1,3 +1,6 @@
+import com.sun.glass.events.KeyEvent;
+import gameobjects.Bomber;
+import util.Key;
 import util.ResourceCollection;
 import java.io.InputStreamReader;
 
@@ -7,6 +10,7 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 
 class GameWindow extends JFrame {
     static final int HUD_HEIGHT = 48;
@@ -34,9 +38,7 @@ class GameWindow extends JFrame {
     }
 }
 
-
 class MenuWindow extends JFrame {
-
     static final int HUD_HEIGHT = 48;
     static final String TITLE = "MegaBlast Mayhem by Trevor Hicks\nand Calvin Bryant";
 
@@ -65,7 +67,6 @@ class MenuWindow extends JFrame {
 }
 
 public class GameLauncher extends Audio {
-
     static GameWindow window;
     static String[] args;
     static MenuWindow menuWindow;
@@ -84,19 +85,17 @@ public class GameLauncher extends Audio {
         menuWindow = new MenuWindow(new MenuGUI());
         System.gc();
     }
+
     public static void startGame() {
-        // 🛡️ Ensure it's initialized no matter what
-        if (ResourceCollection.SpriteMaps.HARD_WALLS.image == null) {
-            ResourceCollection.readFiles();
-        }
+        // Always load resources first
+        ResourceCollection.readFiles();
         ResourceCollection.init();
 
+        // Pick map
         String[] availableMaps = {
                 "/maps/default.csv",
                 "/maps/map_border.csv",
                 "/maps/map_checkerboard.csv",
-                "/maps/map_corners.csv",
-                "/maps/map_cross.csv",
                 "/maps/map_fortress.csv",
                 "/maps/map_spiral.csv",
                 "/maps/map_spiral_v2.csv",
@@ -114,9 +113,11 @@ public class GameLauncher extends Audio {
 
         BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
         GamePanel game = new GamePanel(reader);
+
+        // 🧍 Set up players based on parsed map (generateMap handles it)
         game.init();
 
-// Get dynamic size
+        // Finalize UI
         int windowWidth = game.getMapWidth() * 32;
         int windowHeight = (game.getMapHeight() * 32) + GameWindow.HUD_HEIGHT;
 
@@ -124,6 +125,5 @@ public class GameLauncher extends Audio {
         Audio.stopMenu();
         Audio.playGameSong();
         window = new GameWindow(game, windowWidth, windowHeight);
-
     }
 }

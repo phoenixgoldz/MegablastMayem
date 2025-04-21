@@ -38,7 +38,6 @@ public class GamePanel extends JPanel implements Runnable {
     private Graphics2D buffer;
     private BufferedImage bg;
     private GameHUD gameHUD;
-
     private int mapWidth;
     private int mapHeight;
     private ArrayList<ArrayList<String>> mapLayout;
@@ -50,6 +49,7 @@ public class GamePanel extends JPanel implements Runnable {
     private HashMap<Integer, Key> controls4;
 
     private static final double SOFTWALL_RATE = 0.825;
+    private boolean hud;
 
     /**
      * Construct game panel and load in a map file.
@@ -495,6 +495,43 @@ public class GamePanel extends JPanel implements Runnable {
 
     public int getMapHeight() {
         return this.mapHeight;
+    }
+
+    public Bomber spawnPlayer(int playerIndex, Point point) {
+        // Convert Point to Float
+        Point2D.Float position = new Point2D.Float(point.x, point.y);
+
+        // Load player sprites (make sure SpriteMaps.PLAYERx exists)
+        BufferedImage[][] spriteMap;
+        switch (playerIndex) {
+            case 1:
+                spriteMap = ResourceCollection.SpriteMaps.PLAYER1.getSprites();
+                break;
+            case 2:
+                spriteMap = ResourceCollection.SpriteMaps.PLAYER2.getSprites();
+                break;
+            case 3:
+                spriteMap = ResourceCollection.SpriteMaps.PLAYER3.getSprites();
+                break;
+            case 4:
+                spriteMap = ResourceCollection.SpriteMaps.PLAYER4.getSprites();
+                break;
+            default:
+                throw new IllegalArgumentException("Unsupported player index: " + playerIndex);
+        }
+
+        // Create the player
+        Bomber bomber = new Bomber(position, spriteMap);
+
+        // Add to GameObject list
+        GameObjectCollection.spawn(bomber);
+
+        // Optional: register in HUD
+        if (this.gameHUD != null) {
+
+            this.gameHUD.assignPlayer(bomber, playerIndex - 1); // Index starts at 0
+        }
+        return bomber;
     }
 }
 

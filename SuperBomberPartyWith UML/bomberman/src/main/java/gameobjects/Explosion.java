@@ -247,7 +247,8 @@ public abstract class Explosion extends GameObject {
         this.spriteTimer = 0;
         try
         {
-            AudioInputStream in = getAudioInputStream(new File("/sound effects/8BitBombExplosion.wav"));
+            AudioInputStream in = AudioSystem.getAudioInputStream(
+                    Explosion.class.getResource("/sound effects/8BitBombExplosion.wav"));
             Clip clip = AudioSystem.getClip();
             clip.open(in);
             clip.start();
