@@ -1,76 +1,57 @@
 import com.studiohartman.jamepad.ControllerManager;
 import com.studiohartman.jamepad.ControllerState;
-
-import java.awt.AWTException;
-import java.awt.Robot;
-import java.awt.event.KeyEvent;
+import gameobjects.Bomber;
 
 public class GamepadController implements Runnable {
     private final ControllerManager manager;
-    private final int index;
-    private Robot robot;
+    private final int controllerIndex; // which physical controller
+    private final Bomber player; // which Bomber this controls
+    private static final float DEADZONE = 0.3f;
 
     private boolean upPressed = false;
     private boolean downPressed = false;
-    private boolean aPressed = false;
-    private boolean bPressed = false;
+    private boolean leftPressed = false;
+    private boolean rightPressed = false;
+    private boolean actionPressed = false;
 
-    public GamepadController(int index) {
-        this.index = index;
+    public GamepadController(int controllerIndex, GamePanel game, int playerIndex) {
+        this.controllerIndex = controllerIndex;
         this.manager = new ControllerManager();
         this.manager.initSDLGamepad();
-        try {
-            this.robot = new Robot(); // simulate key events
-        } catch (AWTException e) {
-            e.printStackTrace();
-        }
-    }
 
-    private void pressKey(int keyCode) {
-        robot.keyPress(keyCode);
-        robot.keyRelease(keyCode);
+        // Find the correct Bomber player from the HUD
+        this.player = game.getHUD().getPlayer(playerIndex);
     }
 
     @Override
     public void run() {
         while (true) {
-            ControllerState state = manager.getState(index);
+            ControllerState state = manager.getState(controllerIndex);
             if (!state.isConnected) continue;
 
-            // 🔼 UP
-            if (state.dpadUp && !upPressed) {
-                pressKey(KeyEvent.VK_UP);
-                upPressed = true;
-            } else if (!state.dpadUp) {
-                upPressed = false;
-            }
+            if (player == null) continue; // Skip if no player found
+// Analog stick continuous movement
+            player.setMoveUp(state.leftStickY < -DEADZONE);
+            player.setMoveDown(state.leftStickY > DEADZONE);
+            player.setMoveLeft(state.leftStickX < -DEADZONE);
+            player.setMoveRight(state.leftStickX> DEADZONE);
 
-            // 🔽 DOWN
-            if (state.dpadDown && !downPressed) {
-                pressKey(KeyEvent.VK_DOWN);
-                downPressed = true;
-            } else if (!state.dpadDown) {
-                downPressed = false;
-            }
+            // Optionally: D-Pad backup
+            if (state.dpadUp) player.setMoveUp(true);
+            if (state.dpadDown) player.setMoveDown(true);
+            if (state.dpadLeft) player.setMoveLeft(true);
+            if (state.dpadRight) player.setMoveRight(true);
 
-            // ✅ SELECT (B on Switch Pro = b0)
-            if (state.b && !bPressed) {
-                pressKey(KeyEvent.VK_ENTER);
-                bPressed = true;
+// Plant bomb (B button)
+            if (state.b && !actionPressed) {
+                player.plantBomb();
+                actionPressed = true;
             } else if (!state.b) {
-                bPressed = false;
-            }
-
-            // 🔙 BACK (A on Switch Pro = b1)
-            if (state.a && !aPressed) {
-                pressKey(KeyEvent.VK_BACK_SPACE);
-                aPressed = true;
-            } else if (!state.a) {
-                aPressed = false;
+                actionPressed = false;
             }
 
             try {
-                Thread.sleep(100); // smooth responsiveness
+                Thread.sleep(10); // Very responsive input
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

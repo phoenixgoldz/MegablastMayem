@@ -17,6 +17,10 @@ public class Bomber extends Player {
     private int direction;  // 0: up, 1: down, 2: left, 3: right
     private int spriteIndex;
     private int spriteTimer;
+    private boolean movingUp = false;
+    private boolean movingDown = false;
+    private boolean movingLeft = false;
+    private boolean movingRight = false;
 
     // Stats
     private float moveSpeed;
@@ -29,7 +33,7 @@ public class Bomber extends Player {
 
     public Bomber(Point2D.Float position, BufferedImage[][] spriteMap) {
         super(position, spriteMap[1][0]);
-        this.collider.setRect(this.position.x + 3, this.position.y + 16 + 3, this.width - 6, this.height - 16 - 6);
+        this.collider.setRect(this.position.x + 7, this.position.y + 3, 25, 45);
 
         this.sprites = spriteMap;
         this.direction = 1;
@@ -44,28 +48,43 @@ public class Bomber extends Player {
         this.pierce = false;
         this.kick = false;
     }
+    public void setMoveUp(boolean value) {
+        movingUp = value;
+    }
 
-    private void moveUp() {
+    public void setMoveDown(boolean value) {
+        movingDown = value;
+    }
+
+    public void setMoveLeft(boolean value) {
+        movingLeft = value;
+    }
+
+    public void setMoveRight(boolean value) {
+        movingRight = value;
+    }
+
+    public void moveUp() {
         this.direction = 0;
         this.position.setLocation(this.position.x, this.position.y - this.moveSpeed);
     }
 
-    private void moveDown() {
+    public void moveDown() {
         this.direction = 1;
         this.position.setLocation(this.position.x, this.position.y + this.moveSpeed);
     }
 
-    private void moveLeft() {
+    public void moveLeft() {
         this.direction = 2;
         this.position.setLocation(this.position.x - this.moveSpeed, this.position.y);
     }
 
-    private void moveRight() {
+    public void moveRight() {
         this.direction = 3;
         this.position.setLocation(this.position.x + this.moveSpeed, this.position.y);
     }
 
-    private void plantBomb() {
+    public void plantBomb() {
         float x = Math.round(this.position.getX() / 32) * 32;
         float y = Math.round((this.position.getY() + 16) / 32) * 32;
         Point2D.Float spawnLocation = new Point2D.Float(x, y);
@@ -142,6 +161,10 @@ public class Bomber extends Player {
                 this.spriteIndex = 0;
             }
             this.sprite = this.sprites[this.direction][this.spriteIndex];
+            if (movingUp) moveUp();
+            if (movingDown) moveDown();
+            if (movingLeft) moveLeft();
+            if (movingRight) moveRight();
 
             if (Key.up.isPressed()) moveUp();
             if (Key.down.isPressed()) moveDown();
@@ -178,6 +201,13 @@ public class Bomber extends Player {
             this.dead = true;
             this.spriteIndex = 0;
         }
+    }
+    public Point2D.Float getPosition() {
+        return this.position;
+    }
+    // Somewhere in Bomber.java (below getPosition maybe)
+    public int getFirepower() {
+        return this.firepower;
     }
 
     @Override

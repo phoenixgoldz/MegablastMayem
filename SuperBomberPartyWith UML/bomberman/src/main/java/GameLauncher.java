@@ -1,3 +1,4 @@
+import com.studiohartman.jamepad.ControllerManager;
 import com.sun.glass.events.KeyEvent;
 import gameobjects.Bomber;
 import util.Key;
@@ -89,8 +90,9 @@ public class GameLauncher extends Audio {
 
         menuPadThread.start();
 
-        GamepadController pad = new GamepadController(0);
-        new Thread(pad).start();
+        // ❌ REMOVE this line:
+        // GamepadController pad = new GamepadController(0);
+        // new Thread(pad).start();
 
         menuWindow = new MenuWindow(gui);
 
@@ -127,6 +129,25 @@ public class GameLauncher extends Audio {
 
         // 🧍 Set up players based on parsed map (generateMap handles it)
         game.init();
+// After game.init();
+        ControllerManager manager = new ControllerManager();
+        manager.initSDLGamepad();
+
+// Check connected controllers
+        for (int i = 0; i < 4; i++) {
+            if (manager.getState(i).isConnected) {
+                // Controller is connected: assign GamepadController
+                System.out.println("🎮 Controller " + (i + 1) + " connected!");
+                new Thread(new GamepadController(i, game, i)).start();
+            } else {
+                // No controller: assign NPCController
+                System.out.println("🤖 Spawning NPC for Bomber " + (i + 1));
+                Bomber npcPlayer = game.getHUD().getPlayer(i);
+                if (npcPlayer != null) {
+                    new Thread(new NPCController(npcPlayer)).start();
+                }
+            }
+        }
 
         // Finalize UI
         int windowWidth = game.getMapWidth() * 32;

@@ -126,5 +126,10 @@ public class GameHUD {
             playerGraphics[i].dispose();
         }
     }
-
+    public Bomber getPlayer(int playerIndex) {
+        if (playerIndex >= 0 && playerIndex < players.length) {
+            return players[playerIndex];
+        }
+        return null;
+    }
 }
