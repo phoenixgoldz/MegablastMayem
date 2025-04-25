@@ -1,17 +1,34 @@
 import com.studiohartman.jamepad.ControllerManager;
 import com.studiohartman.jamepad.ControllerState;
-import gameobjects.Player;
+
+import java.awt.AWTException;
+import java.awt.Robot;
+import java.awt.event.KeyEvent;
 
 public class GamepadController implements Runnable {
     private final ControllerManager manager;
-    private final Player player;
     private final int index;
+    private Robot robot;
 
-    public GamepadController(Player player, int index) {
-        this.player = player;
+    private boolean upPressed = false;
+    private boolean downPressed = false;
+    private boolean aPressed = false;
+    private boolean bPressed = false;
+
+    public GamepadController(int index) {
         this.index = index;
         this.manager = new ControllerManager();
-        manager.initSDLGamepad();
+        this.manager.initSDLGamepad();
+        try {
+            this.robot = new Robot(); // simulate key events
+        } catch (AWTException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void pressKey(int keyCode) {
+        robot.keyPress(keyCode);
+        robot.keyRelease(keyCode);
     }
 
     @Override
@@ -20,23 +37,40 @@ public class GamepadController implements Runnable {
             ControllerState state = manager.getState(index);
             if (!state.isConnected) continue;
 
-            if (state.dpadUp) player.toggleUpPressed();
-            else player.unToggleUpPressed();
+            // 🔼 UP
+            if (state.dpadUp && !upPressed) {
+                pressKey(KeyEvent.VK_UP);
+                upPressed = true;
+            } else if (!state.dpadUp) {
+                upPressed = false;
+            }
 
-            if (state.dpadDown) player.toggleDownPressed();
-            else player.unToggleDownPressed();
+            // 🔽 DOWN
+            if (state.dpadDown && !downPressed) {
+                pressKey(KeyEvent.VK_DOWN);
+                downPressed = true;
+            } else if (!state.dpadDown) {
+                downPressed = false;
+            }
 
-            if (state.dpadLeft) player.toggleLeftPressed();
-            else player.unToggleLeftPressed();
+            // ✅ SELECT (B on Switch Pro = b0)
+            if (state.b && !bPressed) {
+                pressKey(KeyEvent.VK_ENTER);
+                bPressed = true;
+            } else if (!state.b) {
+                bPressed = false;
+            }
 
-            if (state.dpadRight) player.toggleRightPressed();
-            else player.unToggleRightPressed();
-
-            if (state.a) player.toggleActionPressed();
-            else player.unToggleActionPressed();
+            // 🔙 BACK (A on Switch Pro = b1)
+            if (state.a && !aPressed) {
+                pressKey(KeyEvent.VK_BACK_SPACE);
+                aPressed = true;
+            } else if (!state.a) {
+                aPressed = false;
+            }
 
             try {
-                Thread.sleep(16);
+                Thread.sleep(100); // smooth responsiveness
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

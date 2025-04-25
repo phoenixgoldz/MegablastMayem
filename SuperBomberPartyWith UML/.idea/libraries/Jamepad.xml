@@ -1,9 +1,13 @@
 <component name="libraryTable">
   <library name="Jamepad">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/Jamepad/Jamepad.jar!/" />
+      <root url="file://$PROJECT_DIR$/bomberman/Jamepad" />
     </CLASSES>
     <JAVADOC />
+    <NATIVE>
+      <root url="file://$PROJECT_DIR$/bomberman/Jamepad" />
+    </NATIVE>
     <SOURCES />
+    <jarDirectory url="file://$PROJECT_DIR$/bomberman/Jamepad" recursive="false" />
   </library>
 </component>

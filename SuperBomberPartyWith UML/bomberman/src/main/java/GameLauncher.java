@@ -74,7 +74,6 @@ public class GameLauncher extends Audio {
     public GameLauncher(int num) {
         super(num);
     }
-
     public static void main(String[] args) {
         GameLauncher.args = args;
         ResourceCollection.readFiles();
@@ -82,7 +81,19 @@ public class GameLauncher extends Audio {
 
         SplashVideoPlayer.playSplashVideo();
 
-        menuWindow = new MenuWindow(new MenuGUI());
+        // Setup gamepad-aware menu
+        MenuGUI gui = new MenuGUI();
+        MenuGamepadController menuPad = new MenuGamepadController(gui);
+        Thread menuPadThread = new Thread(menuPad);
+        System.out.println("[DEBUG] Gamepad thread started");
+
+        menuPadThread.start();
+
+        GamepadController pad = new GamepadController(0);
+        new Thread(pad).start();
+
+        menuWindow = new MenuWindow(gui);
+
         System.gc();
     }
 

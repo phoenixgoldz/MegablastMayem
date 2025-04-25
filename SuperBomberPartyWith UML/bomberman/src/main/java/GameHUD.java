@@ -66,8 +66,8 @@ public class GameHUD {
         // Count dead players
         int deadPlayers = 0;
 
-        for (int i = 0; i < this.players.length; i++) {
-            if (this.players[i].isDead()) {
+        for (Bomber player : this.players) {
+            if (player.isDead()) {
 
                 deadPlayers++;
 

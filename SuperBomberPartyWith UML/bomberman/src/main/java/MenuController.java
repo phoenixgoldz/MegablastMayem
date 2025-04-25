@@ -12,45 +12,22 @@ public class MenuController implements KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
-      //  System.out.println("im working");
+        Key key = this.controls.get(e.getKeyCode());
 
-        if (this.controls.get(e.getKeyCode()) == Key.up && this.gui.activeMenu == SubMenu.NONE) {
-            if (this.gui.cursor == 1) {
-                this.gui.cursor = 3;
-            } else
-                this.gui.cursor--;
-          //  System.out.println("up was pressed");
-            Audio.playMenuSelect();
-            this.gui.repaint();
-        }
-        if (this.controls.get(e.getKeyCode()) == Key.down && this.gui.activeMenu == SubMenu.NONE) {
-            if (this.gui.cursor == 3) {
-                this.gui.cursor = 1;
-            } else
-                this.gui.cursor++;
-          //  System.out.println("down was pressed");
-            Audio.playMenuSelect();
-            this.gui.repaint();
+        if (key == Key.up && gui.activeMenu == SubMenu.NONE) {
+            gui.navigateUp();
         }
 
-        if (this.controls.get(e.getKeyCode()) == Key.action && this.gui.activeMenu == SubMenu.NONE) {
-            if (this.gui.cursor == 1) {
-                GameLauncher.startGame();
-                Audio.stopMenu();
-            }else if (this.gui.cursor == 2) {
-                this.gui.activeMenu = SubMenu.HOW_TO_PLAY;
-            }else
-                if (this.gui.cursor == 3) {
-                this.gui.activeMenu = SubMenu.CONTROLS;
-            }
-         //   System.out.println("enter was pressed");
-            Audio.playMenuSelect();
-            this.gui.repaint();
+        if (key == Key.down && gui.activeMenu == SubMenu.NONE) {
+            gui.navigateDown();
         }
-        if (this.controls.get(e.getKeyCode()) == Key.back) {
-            this.gui.activeMenu = SubMenu.NONE;
-            Audio.playMenuSelect();
-            this.gui.repaint();
+
+        if (key == Key.action) {
+            gui.selectOption(); // show HowToPlay or Controls
+        }
+
+        if (key == Key.back) {
+            gui.goBack(); // back to start screen
         }
     }
 
@@ -59,7 +36,6 @@ public class MenuController implements KeyListener {
     public void keyReleased(KeyEvent e) {
 
     }
-
     MenuGUI gui;
     private HashMap<Integer, Key> controls;
 

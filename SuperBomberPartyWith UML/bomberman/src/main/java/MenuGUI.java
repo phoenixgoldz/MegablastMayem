@@ -34,6 +34,11 @@ public class MenuGUI extends JPanel {
 
     @Override
     public void paintComponent(Graphics g) {
+        if (isStarting) {
+            drawStartScreen1(g);
+            return;
+        }
+
         if (activeMenu == SubMenu.NONE) {
             switch (cursor) {
                 case 1:
@@ -52,6 +57,11 @@ public class MenuGUI extends JPanel {
             drawControls(g);
         }
     }
+    public void forceFocus() {
+        if (!this.hasFocus()) {
+            this.requestFocusInWindow();
+        }
+    }
 
     private static void drawImage(Graphics g, String path) {
         try {
@@ -61,12 +71,63 @@ public class MenuGUI extends JPanel {
             e.printStackTrace();
         }
     }
-    public static void drawStartScreen1(Graphics g) {
-        drawImage(g, "/PlayGameStartScreen1.png");
+    public void navigateDown() {
+        cursor = cursor == 3 ? 1 : cursor + 1;
+        Audio.playMenuSelect();
+        repaint();
+    }
+    public void navigateUp() {
+        cursor = cursor == 1 ? 3 : cursor - 1;
+        Audio.playMenuSelect();
+        repaint();
+    }
+    private boolean isStarting = false;
+
+    public void selectOption() {
+        if (activeMenu == SubMenu.NONE) {
+            switch (cursor) {
+                case 1:
+                    System.out.println("Start Game triggered");
+                    isStarting = true;
+                    Audio.playMenuSelect();
+                    repaint();
+
+                    // Delay launch in a separate thread to show screen2 first
+                    new Thread(() -> {
+                        try {
+                            Thread.sleep(500); // Let drawStartScreen2 show for 500ms
+                        } catch (InterruptedException ignored) {}
+                        GameLauncher.startGame();
+                        Audio.stopMenu();
+                    }).start();
+                    return;
+
+                case 2:
+                    System.out.println("How to Play selected");
+                    activeMenu = SubMenu.HOW_TO_PLAY;
+                    break;
+
+                case 3:
+                    System.out.println("Controls selected");
+                    activeMenu = SubMenu.CONTROLS;
+                    break;
+            }
+
+            Audio.playMenuSelect();
+            repaint();
+        }
     }
 
-    public static void drawStartScreen2(Graphics g) {
-        drawImage(g, "/PlayGameStartScreen2.png");
+    public void goBack() {
+        if (activeMenu != SubMenu.NONE) {
+            activeMenu = SubMenu.NONE;
+            Audio.playMenuSelect();
+            repaint();
+        }
+    }
+
+    public static void drawStartScreen1(Graphics g) {
+        drawImage(g, "/PlayGameStartScreen1.png");
     }
 
     public static void drawStartScreen3(Graphics g) {
@@ -74,7 +135,7 @@ public class MenuGUI extends JPanel {
     }
 
     public static void drawStartScreen4(Graphics g) {
-        drawImage(g, "/HowToPlayStartScreen2.png");
+        drawImage(g, "/HowToPlay.png");
     }
 
     public static void drawStartScreen5(Graphics g) {
@@ -82,38 +143,15 @@ public class MenuGUI extends JPanel {
     }
 
     public static void drawStartScreen6(Graphics g) {
-        drawImage(g, "/ControlsStartScreen2.png");
-    }
-
-    public static void drawPlayScreen1(Graphics g) {
-        drawImage(g, "/PlayGame2PlayerScreen1.png");
-    }
-
-    public static void drawPlayScreen2(Graphics g) {
-        drawImage(g, "/PlayGame2PlayerScreen2.png");
-    }
-
-    public static void drawPlayScreen3(Graphics g) {
-        drawImage(g, "/PlayGame3PlayerScreen1.png");
-    }
-
-    public static void drawPlayScreen4(Graphics g) {
-        drawImage(g, "/PlayGame3PlayerScreen2.png");
-    }
-
-    public static void drawPlayScreen5(Graphics g) {
-        drawImage(g, "/PlayGame4PlayerScreen1.png");
-    }
-
-    public static void drawPlayScreen6(Graphics g) {
-        drawImage(g, "/PlayGame4PlayerScreen2.png");
-    }
-
-    public static void drawHowToPlay(Graphics g) {
-        drawImage(g, "/HowToPlay.png");
-    }
-
-    public static void drawControls(Graphics g) {
         drawImage(g, "/Controls.png");
     }
+    public void drawHowToPlay(Graphics g) {
+        drawStartScreen4(g); // "/HowToPlay.png"
+    }
+
+    public void drawControls(Graphics g) {
+        drawStartScreen6(g); // "/Controls.png"
+    }
+
 }
+
