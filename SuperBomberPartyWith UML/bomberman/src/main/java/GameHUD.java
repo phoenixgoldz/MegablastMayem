@@ -66,11 +66,15 @@ public class GameHUD {
         // Count dead players
         int deadPlayers = 0;
 
-        for (Bomber player : this.players) {
+        for (int i = 0; i < this.players.length; i++) {
+            Bomber player = this.players[i];
+            if (player == null) continue; // Safety check
+
             if (player.isDead()) {
-
                 deadPlayers++;
-
+            } else if (player.isNPC()) {
+                // Player is alive and is an NPC --> Level Up!
+                player.levelUp();
             }
         }
 
@@ -83,10 +87,11 @@ public class GameHUD {
                 }
             }
         } else if (deadPlayers >= this.players.length) {
-            // This should only be reached two or more of the last players die at the same time
+            // This should only happen if everybody dies at the same time
             this.matchSet = true;
         }
     }
+
 
     /**
      * Continuously redraw player information such as score.

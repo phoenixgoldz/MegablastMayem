@@ -1,53 +1,92 @@
-# Megablast Mayhem
+# MegaBlast Mayhem
 
-**Megablast Mayhem** is a chaotic, fast-paced, 2D Bomberman-inspired multiplayer game built in Java using Swing. This revival project was originally a class project, now reimagined and enhanced after a 4-year break.
+**MegaBlast Mayhem** is a high-energy, competitive 2D action-battle game, reimagining classic Bomberman-style gameplay with modern innovations.  
+Built from the ground up in Java with custom frameworks for pixel-precise gameplay, dynamic multiplayer, and advanced AI.
+
+Led by **Trevor Hicks**, MegaBlast Mayhem delivers a true arcade experience, built for both solo and local multiplayer mayhem.
+
+---
 
 ## 🎮 Features
-- 1 to 4 Player support (keyboard-controlled)
-- Destructible and indestructible walls with dynamic sprite slicing
-- Classic power-ups like Bomb, Fire-Up, Speed, and Kick
-- Multiple map support via `.csv` files
-- Retro-style UI screens and audio effects
-- Background music and SFX with looping and transitions
-- Custom hard wall tile logic with bitmasking for clean sprite corners
+- 1–4 Player Support (keyboard and full gamepad support)
+- **Dynamic Controller Detection**: Seamless gamepad recognition (CRKD, Xbox, and others)
+- **Adaptive Smart NPCs**: AI opponents that evolve and grow stronger after every match
+- **Random Passive Abilities**: Every player and NPC gains unique boosts like Speed Surge, Bomb Acceleration, and Blast Resistance
+- **Destructible Maps**: Blast through breakable walls with dynamic sprite slicing and bitmasking
+- **Classic Power-Ups**: Bomb, Fire-Up, Speed Boost, Kick, and more
+- **Procedural Map Support**: Load new maps instantly from simple `.csv` files
+- **Retro Pixel Art and Soundscape**: Handcrafted visuals and sound effects for an authentic arcade feel
+- **Smooth Animations and Transitions**: Professional game loop architecture (Java 17 & Maven)
+- **Responsive UI/UX**: Designed for instant feedback and intuitive controls
+- **Optimized for Competitive Play**: High tick-rate game logic targeting 144 FPS
 
-## 🧱 Technologies
+---
+
+## 🧱 Technology Stack
 - Java 17
 - Maven
-- Java Swing
-- Audio via Java Sound API
-- 2D Graphics with BufferedImage
-- Custom sprite slicing and map loading system
+- Java Swing Framework
+- Jamepad (Gamepad Controller API)
+- Java Sound API
+- BufferedImage and Custom SpriteMap Loader
+- Custom-built Collision and AI Systems
 
-## 🗺️ Map System
-Maps are loaded from `.csv` files where characters like:
-- `H` = Hard wall
-- `S` = Soft wall
-- `1`–`4` = Player spawn points
-- `PB`, `PU`, `PM`, `PS`, `PP`, `PK`, `PT` = Power-ups
+---
 
-## 👾 Controls
-Each player is mapped to unique keys. Press **F1** in-game to view controls, or refer to the controls table in the menu.
+## 🗺️ Dynamic Map System
+Maps are loaded via `.csv` blueprints allowing quick iterations and new battlefield designs:
+- `H` = Indestructible Wall
+- `S` = Destructible Wall
+- `1–4` = Player Starting Positions
+- `PB`, `PU`, `PM`, `PS`, `PP`, `PK`, `PT` = Power-Ups
 
-## 🚀 Getting Started
+Easy to mod, expand, and iterate new level designs.
+
+---
+
+## 🕹️ Controls Overview
+Players are mapped to individual control schemes for smooth 1–4 player gameplay.
+
+- **Keyboard Controls**:
+  - P1: Arrow Keys + Slash for Bomb
+  - P2: WASD + E for Bomb
+  - P3: TGFH + Y for Bomb
+  - P4: IJKL + O for Bomb
+
+- **Controller Support**:
+  - CRKD, Xbox, and any standard DInput/XInput controllers
+  - Full analog stick and D-Pad movement support
+  - Dedicated Bomb Planting button
+
+Use **F1** anytime in-game to review control mappings.
+
+---
+
+## 🚀 Building and Running the Game
 
 ### Prerequisites
-- Java 11+
-- Maven
+- Java Development Kit (JDK) 11 or newer
+- Maven build system
 
-### To Run
+### To Build and Launch:
 ```bash
 mvn clean package
 java -cp target/csc413-secondgame-blai30-1.0.jar Main
-```
 
-### Developer Note
-The main launcher is `GameLauncher.java` and optionally `Main.java`.
+### Developer Notes
+The primary launcher for the game is `GameLauncher.java`.  
+`Main.java` is also available for splash screen or debug launching.
+
+---
 
 ## 🧑‍💻 Credits
-Created by **Trevor Hicks** and **Calvin Bryant**
+- **Trevor Hicks** — Core Development, Game Design, Programming, UI/UX, and Systems Architecture
+- **Calvin Bryant** — Early Debugging and QA Assistance (2021–2022)
 
-Sound effects and music used under educational fair-use and/or public domain licensing. Sprites are original or recreated for non-commercial use.
+Sound effects and music are used under educational fair-use and/or public domain licensing.  
+All sprites are either original creations or remastered assets for non-commercial and indie commercial use.
+
+---
 
 ## 🗝️ License
-[MIT License](LICENSE)
+This project is licensed under the [MIT License](LICENSE).

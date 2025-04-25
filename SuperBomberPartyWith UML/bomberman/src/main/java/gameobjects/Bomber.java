@@ -11,6 +11,14 @@ public class Bomber extends Player {
 
     private Bomb bomb;
     private boolean dead;
+    private int npcLevel = 0;
+    private PassiveAbility passiveAbility = PassiveAbility.NONE;
+    public enum PassiveAbility {
+        NONE,
+        SPEED_BOOST,
+        FASTER_BOMB_PLANT,
+        RESISTANCE
+    }
 
     // Animation
     private BufferedImage[][] sprites;
@@ -48,6 +56,17 @@ public class Bomber extends Player {
         this.pierce = false;
         this.kick = false;
     }
+    public void levelUp() {
+        this.npcLevel++;
+        this.moveSpeed = Math.min(this.moveSpeed + 0.2f, 4.0f); // Slightly faster, capped at 4
+        this.firepower = Math.min(this.firepower + 1, 6); // Slightly more powerful, capped at 6
+        System.out.println("🤖 NPC Bomber leveled up! Now Level " + this.npcLevel);
+    }
+
+    public boolean isNPC() {
+        return this.npcLevel > 0;
+    }
+
     public void setMoveUp(boolean value) {
         movingUp = value;
     }
@@ -202,6 +221,13 @@ public class Bomber extends Player {
             this.spriteIndex = 0;
         }
     }
+    public void assignRandomPassive() {
+        PassiveAbility[] abilities = PassiveAbility.values();
+        int choice = (int)(Math.random() * abilities.length);
+        passiveAbility = abilities[choice];
+        System.out.println("🎲 " + this + " assigned " + passiveAbility);
+    }
+
     public Point2D.Float getPosition() {
         return this.position;
     }
