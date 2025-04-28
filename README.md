@@ -8,17 +8,32 @@ Led by **Trevor Hicks**, MegaBlast Mayhem delivers a true arcade experience, bui
 ---
 
 ## 🎮 Features
-- 1–4 Player Support (keyboard and full gamepad support)
-- **Dynamic Controller Detection**: Seamless gamepad recognition (CRKD, Xbox, and others)
-- **Adaptive Smart NPCs**: AI opponents that evolve and grow stronger after every match
-- **Random Passive Abilities**: Every player and NPC gains unique boosts like Speed Surge, Bomb Acceleration, and Blast Resistance
-- **Destructible Maps**: Blast through breakable walls with dynamic sprite slicing and bitmasking
-- **Classic Power-Ups**: Bomb, Fire-Up, Speed Boost, Kick, and more
-- **Procedural Map Support**: Load new maps instantly from simple `.csv` files
-- **Retro Pixel Art and Soundscape**: Handcrafted visuals and sound effects for an authentic arcade feel
-- **Smooth Animations and Transitions**: Professional game loop architecture (Java 17 & Maven)
-- **Responsive UI/UX**: Designed for instant feedback and intuitive controls
-- **Optimized for Competitive Play**: High tick-rate game logic targeting 144 FPS
+- 1–4 Player Local Support (keyboard and full gamepad support)
+- **Dynamic Controller Detection** (CRKD, Xbox, DInput, XInput)
+- **Adaptive Smart NPCs** that evolve and grow stronger after every match
+- **Random Passive Abilities**: Speed Surge, Bomb Acceleration, Blast Resistance
+- **Destructible Maps** with dynamic sprite slicing and bitmasking
+- **Classic Power-Ups**: Bombs, Fire-Up, Speed Boost, Kick, and more
+- **Procedural Map Loading** from simple `.csv` files
+- **Retro Pixel Art and Soundscape** for an authentic arcade feel
+- **Smooth Animations and Transitions** (high-performance game loop, Java 17 & Maven)
+- **Optimized for Competitive Play**: 144 FPS tick-rate target
+- **Responsive UI/UX**: Designed for instant player feedback
+
+---
+
+## 💣 New Gameplay Systems
+- **Chaos Bomb Mutations**: 20% chance when planting to spawn special bombs:
+  - Gravity Bomb (pulls players)
+  - Chain Bomb (spawns another bomb)
+  - MegaBlast Bomb (massive double explosion)
+  - Ghost Bomb (future stealth explosion)
+- **Gravity Field Mechanics**: Gravity Bombs pull players dynamically based on distance
+- **Chain Reaction Explosions**: Unexpected bonus bombs from Chain mutations
+- **Chaos-Based Bomb Glow**: Visual color changes (Cyan, Yellow, Red, Light Gray, White)
+- **Floor Pulse System**: The battlefield flashes orange during explosions for added intensity
+- **Optimized Sound System**: Resolved music crash bugs and enhanced background management
+- **Bomb Resizing and Collider Sync**: Bombs resized to 39x16 for cleaner visual scaling
 
 ---
 
@@ -26,39 +41,43 @@ Led by **Trevor Hicks**, MegaBlast Mayhem delivers a true arcade experience, bui
 - Java 17
 - Maven
 - Java Swing Framework
-- Jamepad (Gamepad Controller API)
+- Jamepad (Controller API)
 - Java Sound API
 - BufferedImage and Custom SpriteMap Loader
-- Custom-built Collision and AI Systems
+- Custom-Built Collision and AI Systems
+- Dynamic Background Pulse Effects
+- Chaos Mutation Bomb Framework
+- Gravity Field Interaction System
 
 ---
 
 ## 🗺️ Dynamic Map System
-Maps are loaded via `.csv` blueprints allowing quick iterations and new battlefield designs:
-- `H` = Indestructible Wall
-- `S` = Destructible Wall
-- `1–4` = Player Starting Positions
-- `PB`, `PU`, `PM`, `PS`, `PP`, `PK`, `PT` = Power-Ups
+Maps are loaded via `.csv` blueprints allowing quick creation of new battlefield layouts:
 
-Easy to mod, expand, and iterate new level designs.
+| Symbol | Meaning |
+|:------|:--------|
+| `H` | Indestructible Wall |
+| `S` | Destructible Wall |
+| `1–4` | Player Starting Positions |
+| `PB`, `PU`, `PM`, `PS`, `PP`, `PK`, `PT` | Various Power-Ups |
+
+Easy to mod, expand, and design new levels without recompiling.
 
 ---
 
 ## 🕹️ Controls Overview
-Players are mapped to individual control schemes for smooth 1–4 player gameplay.
 
 - **Keyboard Controls**:
-  - P1: Arrow Keys + Slash for Bomb
-  - P2: WASD + E for Bomb
-  - P3: TGFH + Y for Bomb
-  - P4: IJKL + O for Bomb
+  - Arrow Keys: Movement
+  - Space: Place Bomb
+  - F1: Toggle Legacy Titles HUD (if available)
 
-- **Controller Support**:
-  - CRKD, Xbox, and any standard DInput/XInput controllers
-  - Full analog stick and D-Pad movement support
-  - Dedicated Bomb Planting button
+- **Controller Controls**:
+  - D-Pad or Left Analog Stick: Movement
+  - X / A button: Place Bomb
+  - L1 Button: Toggle Legacy Titles HUD (if available)
 
-Use **F1** anytime in-game to review control mappings.
+Supports CRKD, Xbox, and any standard DInput/XInput gamepads.
 
 ---
 
@@ -68,10 +87,11 @@ Use **F1** anytime in-game to review control mappings.
 - Java Development Kit (JDK) 11 or newer
 - Maven build system
 
-### To Build and Launch:
+### To Build and Launch
 ```bash
 mvn clean package
 java -cp target/csc413-secondgame-blai30-1.0.jar Main
+
 
 ### Developer Notes
 The primary launcher for the game is `GameLauncher.java`.  
