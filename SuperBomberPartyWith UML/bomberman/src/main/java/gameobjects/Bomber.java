@@ -1,5 +1,6 @@
 package gameobjects;
 
+import ChaosMutation.ChaosMutation;
 import util.GameObjectCollection;
 import util.Key;
 
@@ -102,7 +103,6 @@ public class Bomber extends Player {
         this.direction = 3;
         this.position.setLocation(this.position.x + this.moveSpeed, this.position.y);
     }
-
     public void plantBomb() {
         float x = Math.round(this.position.getX() / 32) * 32;
         float y = Math.round((this.position.getY() + 16) / 32) * 32;
@@ -112,10 +112,25 @@ public class Bomber extends Player {
             if (obj.collider.contains(spawnLocation)) return;
         }
 
-        this.bomb = new Bomb(spawnLocation, this.firepower, this.pierce, this.bombTimer, this);
-        GameObjectCollection.spawn(bomb);
-        this.bombAmmo--;
+        Bomb newBomb = new Bomb(spawnLocation, this.firepower, this.pierce, this.bombTimer, this);
+
+        // 🎲 20% chance to mutate into a Chaos Bomb
+        if (Math.random() < 0.20) { // 20% chance
+            ChaosMutation[] possibleMutations = {
+                    ChaosMutation.GRAVITY,
+                    ChaosMutation.CHAIN,
+                    ChaosMutation.MEGABLAST,
+                    ChaosMutation.GHOST
+            };
+            ChaosMutation randomMutation = possibleMutations[(int)(Math.random() * possibleMutations.length)];
+            newBomb.setChaosMutation(randomMutation);
+            System.out.println("💥 Chaos Mutation: " + randomMutation);
+        }
+
+        GameObjectCollection.spawn(newBomb);
+        this.bombAmmo--; // Use up one bomb ammo
     }
+
 
     public void restoreAmmo() {
         this.bombAmmo = Math.min(this.maxBombs, this.bombAmmo + 1);
@@ -246,10 +261,10 @@ public class Bomber extends Player {
 
             if (this.kick && !collidingObj.isKicked()) {
                 if (intersection.getMaxY() >= this.collider.getMaxY() && Key.down.isPressed()) {
-                    collidingObj.setKicked(true, KickDirection.FromTop);
+                    collidingObj.setKicked(true, Bomb.KickDirection.FromTop);
                 }
                 if (intersection.getMaxY() >= collidingObj.collider.getMaxY() && Key.up.isPressed()) {
-                    collidingObj.setKicked(true, KickDirection.FromBottom);
+                    collidingObj.setKicked(true, Bomb.KickDirection.FromBottom);
                 }
             }
             this.solidCollision(collidingObj);
@@ -261,10 +276,10 @@ public class Bomber extends Player {
 
             if (this.kick && !collidingObj.isKicked()) {
                 if (intersection.getMaxX() >= this.collider.getMaxX() && Key.right.isPressed()) {
-                    collidingObj.setKicked(true, KickDirection.FromLeft);
+                    collidingObj.setKicked(true, Bomb.KickDirection.FromLeft);
                 }
                 if (intersection.getMaxX() >= collidingObj.collider.getMaxX() && Key.left.isPressed()) {
-                    collidingObj.setKicked(true, KickDirection.FromRight);
+                    collidingObj.setKicked(true, Bomb.KickDirection.FromRight);
                 }
             }
             this.solidCollision(collidingObj);

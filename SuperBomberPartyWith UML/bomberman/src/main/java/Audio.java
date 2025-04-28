@@ -19,6 +19,11 @@ public class Audio {
 
     public static void playMenu() {
         try {
+            if (MenuMusic != null && MenuMusic.isOpen()) {
+                MenuMusic.stop();
+                MenuMusic.close();
+            }
+
             AudioInputStream in1 = AudioSystem.getAudioInputStream(
                     Audio.class.getResource("/music/32. Main Theme.wav")
             );
@@ -29,14 +34,16 @@ public class Audio {
             e.printStackTrace();
         }
     }
-
     public static void stopMenu() {
         if (MenuMusic != null) {
-            MenuMusic.loop(1);
-            MenuMusic.stop();
+            if (MenuMusic.isRunning()) {
+                MenuMusic.stop();
+            }
+            if (MenuMusic.isOpen()) {
+                MenuMusic.close();
+            }
         }
     }
-
     public static void playMenuMove() {
         try {
             AudioInputStream in = AudioSystem.getAudioInputStream(

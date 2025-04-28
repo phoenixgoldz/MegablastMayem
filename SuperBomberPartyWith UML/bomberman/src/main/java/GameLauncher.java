@@ -133,18 +133,21 @@ public class GameLauncher extends Audio {
         ControllerManager manager = new ControllerManager();
         manager.initSDLGamepad();
 
-// Check connected controllers
         for (int i = 0; i < 4; i++) {
-            if (manager.getState(i).isConnected) {
-                // Controller is connected: assign GamepadController
-                System.out.println("🎮 Controller " + (i + 1) + " connected!");
-                new Thread(new GamepadController(i, game, i)).start();
+            Bomber player = game.getHUD().getPlayer(i);
+            if (i == 0) {
+                // Player 1 is ALWAYS keyboard controlled
+                System.out.println("🧑‍💻 Player 1 using Keyboard.");
+                // Keyboard already handled by PlayerController added during map parsing
             } else {
-                // No controller: assign NPCController
-                System.out.println("🤖 Spawning NPC for Bomber " + (i + 1));
-                Bomber npcPlayer = game.getHUD().getPlayer(i);
-                if (npcPlayer != null) {
-                    new Thread(new NPCController(npcPlayer)).start();
+                if (manager.getState(i).isConnected) {
+                    System.out.println("🎮 Controller " + (i + 1) + " connected!");
+                    new Thread(new GamepadController(i, game, i)).start();
+                } else {
+                    System.out.println("🤖 Spawning NPC for Bomber " + (i + 1));
+                    if (player != null) {
+                        new Thread(new NPCController(player)).start();
+                    }
                 }
             }
         }

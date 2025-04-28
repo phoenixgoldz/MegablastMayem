@@ -26,6 +26,9 @@ import java.util.HashMap;
 public class GamePanel extends JPanel implements Runnable {
     int background;
     Audio audio;
+    private int floorPulseTimer = 0;
+    private final int FLOOR_PULSE_DURATION = 30; // Frames to stay bright (you can tweak)
+    private boolean floorPulsing = false;
 
     // Screen size is determined by the map size
     static int panelWidth;
@@ -334,13 +337,24 @@ public class GamePanel extends JPanel implements Runnable {
         System.gc();
 
     }
+    private static GamePanel instance; // 🔥 Add this at the top of the GamePanel class (field)
 
+    @Override
     public void addNotify() {
         super.addNotify();
 
         if (this.thread == null) {
+            instance = this; // 🔥 When GamePanel is created, set instance
             this.thread = new Thread(this, "GameThread");
             this.thread.start();
+        }
+    }
+
+    // 🔥 Then at the very bottom (outside any method):
+    public static void startFloorPulse() {
+        if (instance != null) {
+            instance.floorPulsing = true;
+            instance.floorPulseTimer = instance.FLOOR_PULSE_DURATION;
         }
     }
 
@@ -354,36 +368,48 @@ public class GamePanel extends JPanel implements Runnable {
         long timer = System.currentTimeMillis();
         long lastTime = System.nanoTime();
 
-        final double NS = 1000000000.0 / 60.0; // Locked ticks per second to 60
-        double delta = 0;
-        int fps = 0;    // Frames per second
-        int ticks = 0;  // Ticks/Updates per second; should be 60 at all times
+        final double NS_PER_TICK = 1000000000.0 / 60.0; // 60 ticks per second
+        final double NS_PER_FRAME = 1000000000.0 / 144.0; // 144 frames per second
 
-        // Count FPS, Ticks, and execute updates
+        double deltaTicks = 0;
+        double deltaFrames = 0;
+        int fps = 0;
+        int ticks = 0;
+
         while (this.running) {
-            long currentTime = System.nanoTime();
-            delta += (currentTime - lastTime) / NS;
-            lastTime = currentTime;
+            long now = System.nanoTime();
+            deltaTicks += (now - lastTime) / NS_PER_TICK;
+            deltaFrames += (now - lastTime) / NS_PER_FRAME;
+            lastTime = now;
 
-            if (delta >= 1) {
+            if (deltaTicks >= 1) {
                 try {
                     this.update();
                 } catch (UnsupportedAudioFileException | IOException e) {
                     e.printStackTrace();
                 }
                 ticks++;
-                delta--;
+                deltaTicks--;
             }
 
-            this.repaint();
-            fps++;
+            if (deltaFrames >= 1) {
+                this.repaint();
+                fps++;
+                deltaFrames--;
+            }
 
-            // Update FPS and Ticks counter every second
+            // Update FPS/Ticks counter every second
             if (System.currentTimeMillis() - timer > 1000) {
-                timer = System.currentTimeMillis();
+                timer += 1000;
                 GameLauncher.window.update(fps, ticks);
                 fps = 0;
                 ticks = 0;
+            }
+
+            // Sleep a little to prevent CPU maxing out
+            try {
+                Thread.sleep(1);
+            } catch (InterruptedException ignored) {
             }
         }
 
@@ -427,6 +453,13 @@ public class GamePanel extends JPanel implements Runnable {
                     objIndex++;
                 }
             }
+            if (floorPulsing) {
+                floorPulseTimer--;
+                if (floorPulseTimer <= 0) {
+                    floorPulsing = false;
+                }
+            }
+
         }
 
         // Check for the last bomber to survive longer than the others and increase score
@@ -468,10 +501,23 @@ public class GamePanel extends JPanel implements Runnable {
         this.gameHUD.drawHUD();
 
         // Draw background
-        for (int i = 0; i < this.world.getWidth(); i += this.bg.getWidth()) {
-            for (int j = 0; j < this.world.getHeight(); j += this.bg.getHeight()) {
-                this.buffer.drawImage(this.bg, i, j, null);
+        BufferedImage backgroundTile = ResourceCollection.Images.BACKGROUND.getImage();
+        int tileWidth = backgroundTile.getWidth();
+        int tileHeight = backgroundTile.getHeight();
+
+        for (int x = 0; x < getWidth(); x += tileWidth) {
+            for (int y = 0; y < getHeight(); y += tileHeight) {
+                g2.drawImage(backgroundTile, x, y, null); // ✅ use g2 here
             }
+        }
+
+// If pulsing, draw a transparent bright overlay
+        if (floorPulsing) {
+            Composite oldComposite = g2.getComposite();
+            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.2f)); // 20% brightness
+            g2.setColor(Color.ORANGE);
+            g2.fillRect(0, 0, getWidth(), getHeight());
+            g2.setComposite(oldComposite);
         }
 
         // Draw game objects

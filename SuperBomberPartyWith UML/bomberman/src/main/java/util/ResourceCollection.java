@@ -118,46 +118,33 @@ public class ResourceCollection {
             return;
         }
 
-        SpriteMaps.PLAYER_1.sprites = sliceSpriteMap(SpriteMaps.PLAYER_1.image, 40, 48); // 160x240, 4x5 grid
-        SpriteMaps.PLAYER_2.sprites = sliceSpriteMap(SpriteMaps.PLAYER_2.image, 40, 48); // 160x240, 4x5 grid
-        SpriteMaps.PLAYER_3.sprites = sliceSpriteMap(SpriteMaps.PLAYER_3.image, 60, 60); // 240x300, 4x5 grid (correct now!)
-        SpriteMaps.PLAYER_4.sprites = sliceSpriteMap(SpriteMaps.PLAYER_4.image, 40, 48); // 160x240, 4x5 grid
-        SpriteMaps.HARD_WALLS.sprites = sliceSpriteMap(SpriteMaps.HARD_WALLS.image, 32, 32);
+        // Players
+        SpriteMaps.PLAYER_1.sprites = sliceSpriteMap(SpriteMaps.PLAYER_1.image, 4, 5);
+        SpriteMaps.PLAYER_2.sprites = sliceSpriteMap(SpriteMaps.PLAYER_2.image, 4, 5);
+        SpriteMaps.PLAYER_3.sprites = sliceSpriteMap(SpriteMaps.PLAYER_3.image, 4, 5);
+        SpriteMaps.PLAYER_4.sprites = sliceSpriteMap(SpriteMaps.PLAYER_4.image, 4, 5);
+        // Walls (still 32x32 pixels)
+
+        SpriteMaps.HARD_WALLS.sprites = sliceFixedSize(SpriteMaps.HARD_WALLS.image, 32, 32);
 
         if (SpriteMaps.HARD_WALLS.sprites.length == 0) {
             System.err.println("❌ Sliced HARD_WALLS sprites are empty!");
             return;
         }
 
-        SpriteMaps.BOMB.sprites = sliceSpriteMap(SpriteMaps.BOMB.image, 32, 32);
-        SpriteMaps.BOMB_PIERCE.sprites = sliceSpriteMap(SpriteMaps.BOMB_PIERCE.image, 32, 32);
-        SpriteMaps.EXPLOSION_SPRITEMAP.sprites = sliceSpriteMap(SpriteMaps.EXPLOSION_SPRITEMAP.image, 32, 32);
+        // Bombs
+        SpriteMaps.BOMB.sprites = sliceSpriteMap(SpriteMaps.BOMB.image, 6, 2); // 6 columns, 2 rows
+        SpriteMaps.BOMB_PIERCE.sprites = sliceSpriteMap(SpriteMaps.BOMB_PIERCE.image, 6, 2); // 6 columns, 2 rows
 
+        // Explosion
+        SpriteMaps.EXPLOSION_SPRITEMAP.sprites = sliceFixedSize(SpriteMaps.EXPLOSION_SPRITEMAP.image, 32, 32);
         loadHardWallTiles(SpriteMaps.HARD_WALLS.sprites);
     }
 
-    /**
-     * Slice sprite sheet into individual sprites stored in a two-dimensional array.
-     * @param spriteMap Sprite sheet to be sliced
-     * @param spriteWidth Width of each individual sprite
-     * @param spriteHeight Height of each individual sprite
-     * @return Two-dimensional array of sprites
-     */
-    private static BufferedImage[][] sliceSpriteMap(BufferedImage spriteMap, int spriteWidth, int spriteHeight) {
-        if (spriteMap == null) {
-            System.err.println("ERROR: Tried to slice a null spriteMap.");
-            return new BufferedImage[0][0];
-        }
-
-        int rows = spriteMap.getHeight() / spriteHeight;
-        int cols = spriteMap.getWidth() / spriteWidth;
-
-        if (rows == 0 || cols == 0) {
-            System.err.println("ERROR: Invalid sprite size or image dimensions too small.");
-            return new BufferedImage[0][0];
-        }
-
-        System.out.println("Slicing spriteMap into " + rows + " rows and " + cols + " cols.");
+    // For grids (like 4x5 players, or 16x1 bombs)
+    private static BufferedImage[][] sliceSpriteMap(BufferedImage spriteMap, int cols, int rows) {
+        int spriteWidth = spriteMap.getWidth() / cols;
+        int spriteHeight = spriteMap.getHeight() / rows;
 
         BufferedImage[][] sprites = new BufferedImage[rows][cols];
         for (int row = 0; row < rows; row++) {
@@ -165,11 +152,20 @@ public class ResourceCollection {
                 sprites[row][col] = spriteMap.getSubimage(col * spriteWidth, row * spriteHeight, spriteWidth, spriteHeight);
             }
         }
-        if (spriteMap.getWidth() < spriteWidth || spriteMap.getHeight() < spriteHeight) {
-            System.err.println("❌ Sprite sheet too small: " + spriteMap.getWidth() + "x" + spriteMap.getHeight());
-            return new BufferedImage[0][0];
-        }
+        return sprites;
+    }
 
+    // For fixed size (like walls and explosion 32x32)
+    private static BufferedImage[][] sliceFixedSize(BufferedImage spriteMap, int spriteWidth, int spriteHeight) {
+        int rows = spriteMap.getHeight() / spriteHeight;
+        int cols = spriteMap.getWidth() / spriteWidth;
+
+        BufferedImage[][] sprites = new BufferedImage[rows][cols];
+        for (int row = 0; row < rows; row++) {
+            for (int col = 0; col < cols; col++) {
+                sprites[row][col] = spriteMap.getSubimage(col * spriteWidth, row * spriteHeight, spriteWidth, spriteHeight);
+            }
+        }
         return sprites;
     }
 
